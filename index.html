@@ -64,7 +64,7 @@ window.addEventListener('online', () => {
     msg(1);
   
     clearInterval(timer);
-     timer = setInterval(checkInternetSpeed, 1000);
+     timer = setInterval(checkInternetSpeed, 3000);
 });
 
 window.addEventListener('offline', () => {
@@ -112,7 +112,7 @@ function checkInternetSpeed() {
 }
 
 
-timer = setInterval(checkInternetSpeed, 1000);
+timer = setInterval(checkInternetSpeed, 3000);
   </script>
 </head>
 <body>
