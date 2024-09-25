@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Speed Update</title>
+  <style>
+      * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .speed-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .speed {
+            font-size: 5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .unit {
+            font-size: 2rem;
+        }
+
+        .loading {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+  </style>
+  <script>
+    var timer;
+var inprogress = false;
+
+window.addEventListener('online', () => {
+    msg(1);
+  
+    clearInterval(timer);
+     timer = setInterval(checkInternetSpeed, 1000);
+});
+
+window.addEventListener('offline', () => {
+    clearInterval(timer);
+    msg(0);
+});
+
+function msg(speed)
+{
+  document.title = speed.toString();
+  document.getElementById("info").innerText = speed.toString();
+}
+
+function checkInternetSpeed() {
+    if (inprogress) return;
+  
+    var imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Generic_Camera_Icon.svg/800px-Generic_Camera_Icon.svg.png"; // URL of a test image (replace with a valid one)
+    var imageSizeInBytes = 197000; // Size of the image in bytes (500 KB in this case)
+
+    var startTime = new Date().getTime();
+
+    var downloadImage = new Image();
+  
+    inprogress = true;
+
+    downloadImage.onload = function () {
+        inprogress = false;
+        var endTime = new Date().getTime();
+        var duration = (endTime - startTime) / 1000; // Convert milliseconds to seconds
+
+        var bitsLoaded = imageSizeInBytes * 8;
+        var speedBps = (bitsLoaded / duration).toFixed(2); // Speed in bits per second
+        var speedKbps = (speedBps / 1024).toFixed(2); // Speed in kilobits per second
+        var speedMbps = (speedKbps / 1024).toFixed(2); // Speed in megabits per second
+
+        msg(speedMbps);
+    };
+
+    downloadImage.onerror = function () {
+        inprogress = false;
+        msg(0);
+    };
+
+    downloadImage.src = imageUrl + "?cache=" + Math.random(); // Prevent caching by adding a random query
+}
+
+
+timer = setInterval(checkInternetSpeed, 1000);
+  </script>
+</head>
+<body>
+  <div class="speed" id="info">0</div>
+  <div class="unit">Mbps</div>
+</body>
+</html>
